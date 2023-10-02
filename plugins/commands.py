@@ -179,7 +179,7 @@ async def start(client, message):
             msg = await client.send_cached_media(chat_id=message.from_user.id, file_id=file_id, protect_content=True if pre == 'filep' else False,)
             filetype = msg.media
             file = getattr(msg, filetype)
-            title = file.file_name
+            title = {' '.join(filter(lambda x: not x.startswith('[') and not x.startswith('{') and not x.startswith('}') and not x.startswith('@') and not x.startswith('www'), file.file_name.split()))}
             size=get_size(file.file_size)
             f_caption = f"<code>{title}</code>"
             if CUSTOM_FILE_CAPTION:
@@ -190,7 +190,7 @@ async def start(client, message):
         return await message.reply('NO SUCH FILE EXIST...')
         
     files = files_[0]
-    title = files.file_name
+    title = {' '.join(filter(lambda x: not x.startswith('[') and not x.startswith('{') and not x.startswith('}') and not x.startswith('@') and not x.startswith('www'), files.file_name.split()))}
     size=get_size(files.file_size)
     f_caption=files.caption
     if CUSTOM_FILE_CAPTION:
@@ -200,7 +200,7 @@ async def start(client, message):
             logger.exception(e)
             f_caption=f_caption
     if f_caption is None:
-        f_caption = f"{files.file_name}"
+        f_caption = f"{' '.join(filter(lambda x: not x.startswith('[') and not x.startswith('{') and not x.startswith('}') and not x.startswith('@') and not x.startswith('www'), file.file_name.split()))}"
     await client.send_cached_media(chat_id=message.from_user.id, file_id=file_id, caption=f_caption, protect_content=True if pre == 'filep' else False,)
                     
 
@@ -387,6 +387,5 @@ async def geg_template(client, message):
     settings = await get_settings(grp_id)
     template = settings['template']
     await sts.edit(f"Cᴜʀʀᴇɴᴛ Tᴇᴍᴘʟᴀᴛᴇ Fᴏʀ {title} Iꜱ\n\n{template}")
-
 
 
